@@ -1,0 +1,8 @@
+{
+  "name": "jig",
+  "version": "1.0.0",
+  "description": "Turn a well-defined spec into an engineering-ready implementation plan with embedded build discipline — TDD, subagent orchestration, quality gates, and the Loop Contract — or audit an existing plan for completeness.",
+  "author": {
+    "name": "dobeck"
+  }
+}

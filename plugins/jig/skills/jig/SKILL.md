@@ -84,8 +84,9 @@ Enter plan mode. Create the implementation plan following the structure defined 
 The plan MUST include the 12 core build discipline patterns from [[patterns.md]], plus the
 loop/cross-model patterns (13–22) where they apply — especially the **Loop Contract** (pattern
 17: L1 tool-loops / L2 independent + cross-model gates / L3 product loops, each with explicit
-bounds and stop conditions). For shaping a non-obvious loop, use the companion [[loop-god]] skill
-and embed its Loop Contract into the plan. Every subagent prompt in the plan MUST embed these
+bounds and stop conditions). For shaping a non-obvious loop, work the Loop Contract directly from
+[[quality-gates.md]]; if the optional `loop-god` companion skill is installed, use it to shape the
+loop and embed its Loop Contract into the plan. Every subagent prompt in the plan MUST embed these
 principles:
 
 **From Karpathy:**
@@ -214,8 +215,9 @@ A jig plan is ready to build when:
 
 ## Related
 
-- [[loop-god]] — interactive loop-designer; emits the Loop Contract + paste-ready orchestrator/
-  subagent/gate prompts. Use it to shape a non-obvious loop, then embed the result in a jig plan.
+- `loop-god` *(optional companion, install separately)* — interactive loop-designer; emits the
+  Loop Contract + paste-ready orchestrator/subagent/gate prompts. If installed, use it to shape a
+  non-obvious loop, then embed the result in a jig plan. Jig works fully without it.
 - `ody-skill-polish` — bring skills (including this one) to production quality.
 
-> Future: jig + loop-god are slated to be packaged as Odyssey grimoire marketplace plugins.
+> `loop-god`, jig's companion loop-designer, is coming to the grimoire marketplace soon.

@@ -217,7 +217,8 @@ SAFETY RAILS:
 
 Added 2026-06-09, hardened across a multi-phase autonomous build (the `dropt-page`
 toolkit). The first 12 patterns prevent build *chaos*; these prevent *plausible-but-wrong*
-work surviving the loop. For the loop-shaping details, see the companion [[loop-god]] skill.
+work surviving the loop. For the loop-shaping details, see the optional companion `loop-god`
+skill if it's installed.
 
 ## 13. Cross-Model Verification (highest-value)
 

@@ -223,4 +223,5 @@ The quality gate above is the **L2 loop** from the Loop Contract (pattern 17). R
 The L1 loop (inside each builder, before the gate) is **tool-evaluated only** (tests + typecheck +
 smoke; no LLM self-critique), bounded to 2 iters for test-writing phases and 3 for implementation.
 
-For shaping these loops on a new feature, see the [[loop-god]] skill.
+For shaping these loops on a new feature, the optional companion `loop-god` skill (if installed)
+walks you through it; otherwise shape the Loop Contract directly from the pipeline above.
