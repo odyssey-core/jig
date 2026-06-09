@@ -1,0 +1,82 @@
+# Auto-bump plugin version when plugin files change.
+# Add this to your repo at .github/workflows/bump-plugin-version.yml
+# Update PLUGIN_DIR to match your plugin's location.
+
+name: Bump Plugin Version
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check for plugin changes
+        id: changes
+        run: |
+          PLUGIN_DIR="plugins"  # Change this to your plugin directory
+
+          # Get changed files in the last commit
+          CHANGED=$(git diff --name-only HEAD~1 HEAD -- "$PLUGIN_DIR" 2>/dev/null || echo "")
+
+          # Exclude plugin.json itself to avoid infinite loops
+          CHANGED=$(echo "$CHANGED" | grep -v "plugin.json$" || true)
+
+          if [ -n "$CHANGED" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Plugin files changed:"
+            echo "$CHANGED"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No plugin file changes detected."
+          fi
+
+      - name: Find and bump plugin versions
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          PLUGIN_DIR="plugins"  # Must match above
+
+          # Find all plugin.json files under the plugin directory
+          find "$PLUGIN_DIR" -path "*/.claude-plugin/plugin.json" | while read -r manifest; do
+            plugin_dir=$(dirname "$(dirname "$manifest")")
+
+            # Check if this specific plugin had changes
+            PLUGIN_CHANGED=$(git diff --name-only HEAD~1 HEAD -- "$plugin_dir" | grep -v "plugin.json$" || true)
+            if [ -z "$PLUGIN_CHANGED" ]; then
+              continue
+            fi
+
+            echo "Bumping version in $manifest"
+
+            # Read current version
+            current=$(grep -o '"version": *"[^"]*"' "$manifest" | head -1 | grep -o '[0-9]*\.[0-9]*\.[0-9]*')
+            if [ -z "$current" ]; then
+              echo "  No version found, skipping"
+              continue
+            fi
+
+            # Bump patch version
+            major=$(echo "$current" | cut -d. -f1)
+            minor=$(echo "$current" | cut -d. -f2)
+            patch=$(echo "$current" | cut -d. -f3)
+            new_version="$major.$minor.$((patch + 1))"
+
+            # Replace in file
+            sed -i "s/\"version\": *\"$current\"/\"version\": \"$new_version\"/" "$manifest"
+            echo "  $current -> $new_version"
+          done
+
+      - name: Commit version bump
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          # Only commit if there are actual changes
+          git diff --staged --quiet || git commit -m "chore: auto-bump plugin version"
+          git push
