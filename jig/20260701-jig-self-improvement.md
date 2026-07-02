@@ -581,13 +581,13 @@ input (default off), and still be draft-for-human-review. Deferred until the exa
 **Contract file**: C2/C3/C4/C5 are the single source of truth for both `retro-template.md` (P2) and `collect.mjs` (P3). Change the contract in THIS file first, then both consumers in the same phase.
 
 ## Build Checklist
-- [ ] Phase 0: skill_version wired, `node --test` harness green (1 stub) · [ ] gate PASSED
-- [ ] Phase 1: `build-journal.md` (journal+handoff), SKILL wired, dry-run sim passed · [ ] gate PASSED
-- [ ] Phase 2: `retro-template.md` == C2/C3, no invisible chars, hygiene note · [ ] gate PASSED
-- [ ] Phase 3a: collector tests FAILING for the right reason
-- [ ] Phase 3b: `collect.mjs` green · [ ] Phase 3 gate (Codex MANDATORY) PASSED
-- [ ] Phase 4: workflow + run/dryrun + SETUP; digest + silent-when-empty verified · [ ] Phase 4 gate (Codex MANDATORY) PASSED
-- [ ] Final: `node --test` green, no dangling wikilinks, no invisible chars, cold read clean, Codex final clean
+- [x] Phase 0: skill_version wired, `node --test` harness green (1 stub) · [x] gate PASSED
+- [x] Phase 1: `build-journal.md` (journal+handoff), SKILL wired, dry-run sim passed · [x] gate PASSED
+- [x] Phase 2: `retro-template.md` == C2/C3, no invisible chars, hygiene note · [x] gate PASSED
+- [x] Phase 3a: collector tests FAILING for the right reason
+- [x] Phase 3b: `collect.mjs` green · [x] Phase 3 gate (Codex MANDATORY) PASSED
+- [x] Phase 4: workflow + run/dryrun + SETUP; digest + silent-when-empty verified · [x] Phase 4 gate (Codex MANDATORY) PASSED
+- [x] Final: `node --test` green, no dangling wikilinks, no invisible chars, cold read clean, Codex final clean
 
 ## How to Execute This Plan
 You are the orchestrator. **Dogfood the new protocols as you build.**
