@@ -1,0 +1,146 @@
+name: jig-retro digest
+
+# Daily cross-repo retro aggregation. Two DISTINCT tokens:
+#   - App token (GH_TOKEN_READ) reads retros across odyssey-core (default
+#     GITHUB_TOKEN cannot read other org repos).
+#   - github.token (GH_TOKEN) writes the digest issue + state commit in THIS repo.
+
+on:
+  schedule:
+    - cron: "0 13 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: jig-retro-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Mint GitHub App token (cross-repo READ only)
+        id: apptoken
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.JIG_APP_ID }}
+          private-key: ${{ secrets.JIG_APP_PRIVATE_KEY }}
+          owner: odyssey-core
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Discover retros + build manifest + run collector
+        id: collect
+        env:
+          # This step is READ-ONLY (gh search + gh api GET). It runs under the
+          # App token exclusively — the only place the cross-repo read token is
+          # ever exposed. It is NEVER used to write; the publish step below uses
+          # github.token instead. gh reads GH_TOKEN, so that is the App token here.
+          GH_TOKEN: ${{ steps.apptoken.outputs.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p _retros
+          LIMIT=1000
+
+          # Discovery via the App token (cross-repo read).
+          gh search code "jig_retro" --owner odyssey-core --limit "$LIMIT" \
+            --json repository,path > _retros/search.json
+
+          COUNT=$(jq 'length' _retros/search.json)
+          echo "discovered=$COUNT retro-bearing paths"
+
+          # Overflow detection: a full page means results may be truncated.
+          TRUNCATED=false
+          if [ "$COUNT" -eq "$LIMIT" ]; then
+            echo "DISCOVERY_TRUNCATED"
+            TRUNCATED=true
+          fi
+          echo "truncated=$TRUNCATED" >> "$GITHUB_OUTPUT"
+
+          # Fetch each file's contents and build the manifest. Untrusted retro
+          # bytes are written to files ONLY — never interpolated into a command.
+          n=0
+          echo "[]" > _retros/manifest.json
+          while read -r repo && read -r path; do
+            n=$((n+1))
+            gh api "repos/${repo}/contents/${path}" --jq .content \
+              | base64 -d > "_retros/${n}.md"
+            jq --arg repo "$repo" --arg path "$path" --arg file "_retros/${n}.md" \
+              '. + [{repo:$repo, path:$path, file:$file}]' \
+              _retros/manifest.json > _retros/manifest.json.tmp
+            mv _retros/manifest.json.tmp _retros/manifest.json
+          done < <(jq -r '.[] | .repository.nameWithOwner, .path' _retros/search.json)
+
+          # run.mjs reads the manifest + files via fs; no retro bytes on the shell.
+          node scripts/jig-retro/run.mjs | tee _retros/run.out
+          NEW_WORK=$(grep -oE 'NEW_WORK=(true|false)' _retros/run.out | cut -d= -f2)
+          echo "new_work=$NEW_WORK" >> "$GITHUB_OUTPUT"
+
+      - name: Publish digest issue + commit state (WRITE via github.token)
+        if: steps.collect.outputs.new_work == 'true'
+        env:
+          # jig-repo writes ONLY. This token cannot read other org repos.
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          # Append the truncation warning to the digest body if flagged.
+          if [ "${{ steps.collect.outputs.truncated }}" = "true" ]; then
+            printf '\n⚠ discovery may be truncated\n' >> digest-body.md
+          fi
+
+          TITLE='[jig-retro] Improvement digest'
+          gh label create jig-improvement --color FBCA04 --force
+
+          # Prefer the digest issue WE created and persisted in state — this is
+          # the authoritative pointer and cannot be hijacked by a spoofed
+          # exact-title issue. Verify it is still an open issue with our title
+          # before trusting it; only if there is no valid persisted pointer do we
+          # fall back to an exact-title search, then to creation.
+          NUM=""
+          PERSISTED=$(jq -r '.digest_issue // empty' .jig/retro-state.json)
+          if [ -n "$PERSISTED" ]; then
+            if gh issue view "$PERSISTED" \
+                 --json number,title,state \
+                 --jq 'select(.state == "OPEN" and .title == "'"$TITLE"'") | .number' \
+                 > persisted.json 2>/dev/null && [ -s persisted.json ]; then
+              NUM="$PERSISTED"
+            fi
+          fi
+
+          if [ -z "$NUM" ]; then
+            # No valid persisted pointer: find the one open digest issue by EXACT title.
+            gh issue list --state open --label jig-improvement \
+              --search 'in:title "[jig-retro] Improvement digest"' \
+              --json number,title > issues.json
+            NUM=$(jq -r --arg t "$TITLE" '.[] | select(.title == $t) | .number' issues.json | head -n1)
+          fi
+
+          if [ -n "$NUM" ]; then
+            gh issue edit "$NUM" --body-file digest-body.md
+          else
+            URL=$(gh issue create --title "$TITLE" --label jig-improvement --body-file digest-body.md)
+            NUM=$(printf '%s\n' "$URL" | grep -oE '[0-9]+$')
+          fi
+
+          # Persist the issue number into state.
+          jq --argjson num "$NUM" '.digest_issue = $num' .jig/retro-state.json > .jig/retro-state.json.tmp
+          mv .jig/retro-state.json.tmp .jig/retro-state.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .jig/retro-state.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(jig-retro): update digest state [skip ci]"
+            git pull --rebase
+            git push
+          fi

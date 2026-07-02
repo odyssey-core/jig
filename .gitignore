@@ -1,1 +1,6 @@
 .claude/settings.local.json
+
+# jig-retro CI scratch (never commit fetched retros or rendered digest body)
+_retros/
+digest-body.md
+scripts/jig-retro/.dryrun-tmp/
