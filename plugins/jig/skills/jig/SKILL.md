@@ -143,6 +143,13 @@ Once approved:
 The session can then begin executing the plan phase by phase. The plan contains
 all instructions needed — no special skill required for the build phase.
 
+While executing, maintain an append-only build journal per [[build-journal.md]] —
+one entry per phase capturing the decisions, pinned contracts, deviations, and
+green checkpoint that the plan left in prose. At a clean phase boundary (gate
+PASSED, checkpoint committed) when context runs high, emit a Fresh-Session
+Handoff prompt per [[build-journal.md]] so a fresh session can continue the build
+with zero loss of the orchestrator's connective tissue.
+
 ---
 
 ## Review Mode
