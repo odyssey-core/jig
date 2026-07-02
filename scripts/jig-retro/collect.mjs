@@ -21,6 +21,14 @@ const REQUIRED_KEYS = [
   'proposed_skill_change', 'evidence_refs', 'generalizable', 'confidence',
 ];
 
+// C2: all five frontmatter keys are required. A retro missing any is malformed
+// and is dropped whole (parseRetro -> null), mirroring the jig_retro gate.
+const REQUIRED_FRONTMATTER = ['jig_retro', 'skill_version', 'plan', 'repo', 'created'];
+
+// C2 closed value sets. Findings carrying an out-of-set value are malformed.
+const GENERALIZABLE_SET = new Set(['true', 'false']);
+const CONFIDENCE_SET = new Set(['low', 'medium', 'high']);
+
 const TRAILING_PUNCT = new Set(['.', ',', ';', ':', '!', '?']);
 
 // ---------------------------------------------------------------------------
@@ -100,8 +108,15 @@ function parseFrontmatter(text) {
 // ---------------------------------------------------------------------------
 function extractFindingsBlock(text) {
   const lines = text.split('\n');
-  let open = -1;
+  // C2: the findings block lives in the `## Findings` section. Anchor there so a
+  // stray ```yaml block in the human `## Summary` can never be read as data.
+  let findingsAt = -1;
   for (let i = 0; i < lines.length; i++) {
+    if (/^##\s+Findings\s*$/.test(lines[i])) { findingsAt = i; break; }
+  }
+  if (findingsAt === -1) return null;
+  let open = -1;
+  for (let i = findingsAt + 1; i < lines.length; i++) {
     if (lines[i] === '```yaml') { open = i; break; }
   }
   if (open === -1) return null;
@@ -139,7 +154,12 @@ function arrayValue(rest) {
 // ---------------------------------------------------------------------------
 export function parseRetro(text) {
   const fm = parseFrontmatter(text);
-  if (!fm || fm.jig_retro !== 'true') return null;
+  if (!fm) return null;
+  // All required frontmatter keys must be present (C2). Missing any -> drop file.
+  for (const k of REQUIRED_FRONTMATTER) {
+    if (fm[k] === undefined) return null;
+  }
+  if (fm.jig_retro !== 'true') return null;
 
   const skill_version = fm.skill_version;
   const repo = fm.repo;
@@ -161,7 +181,11 @@ export function parseRetro(text) {
         const hasAll = REQUIRED_KEYS.every(
           (k) => Object.prototype.hasOwnProperty.call(current, k),
         );
-        if (!hasAll) {
+        // C2 closed sets: an out-of-set generalizable/confidence is malformed.
+        const validSets =
+          GENERALIZABLE_SET.has(current.generalizable) &&
+          CONFIDENCE_SET.has(current.confidence);
+        if (!hasAll || !validSets) {
           skipped++;
         } else {
           if (!AREA_SET.has(current.area)) current.area = 'other';
@@ -314,8 +338,11 @@ export function renderDigest(state) {
     const sortedRepos = [...(v.repos || [])].sort();
     const repos = sortedRepos.map((r) => inlineCode(r)).join(', ');
     const count = sortedRepos.length;
-    const firstSeen = v.first_seen ? ` — first_seen: ${v.first_seen}` : '';
-    lines.push(`- ${change} — repos: ${count} (${repos}) — confidence: ${v.confidence}${firstSeen}`);
+    // confidence is a closed set once parsed, but sanitize anyway so a hand-built
+    // or legacy state can never inject markup through this field.
+    const confidence = CONFIDENCE_SET.has(v.confidence) ? v.confidence : sanitize(v.confidence);
+    const firstSeen = v.first_seen ? ` — first_seen: ${sanitize(v.first_seen)}` : '';
+    lines.push(`- ${change} — repos: ${count} (${repos}) — confidence: ${confidence}${firstSeen}`);
   }
   lines.push('');
   return lines.join('\n');
