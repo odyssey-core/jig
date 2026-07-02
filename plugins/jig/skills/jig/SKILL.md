@@ -150,6 +150,12 @@ PASSED, checkpoint committed) when context runs high, emit a Fresh-Session
 Handoff prompt per [[build-journal.md]] so a fresh session can continue the build
 with zero loss of the orchestrator's connective tissue.
 
+After a build completes, or at a session break, produce a structured retro at
+`jig/review/{YYYYMMDD}-{slug}-retro.md` per [[retro-template.md]]. This is the
+first input to the org self-improvement loop — a short human summary plus one
+machine-parseable findings block that org-wide automation harvests to improve the
+jig skill.
+
 ---
 
 ## Review Mode
