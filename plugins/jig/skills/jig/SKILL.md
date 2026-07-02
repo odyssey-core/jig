@@ -9,7 +9,7 @@ description: >-
   "review this plan", "is this plan ready to build", "turn this spec into a plan",
   "resume this build", "write a build retro". Produces plans detailed enough for a fresh
   Claude Code session to build autonomously — and captures what each build learns.
-updated: "2026-07-01"
+updated: "2026-07-02"
 ---
 
 # Jig
@@ -22,29 +22,30 @@ that a fresh Claude Code session can read it and build autonomously.
 **Named after the machining jig** — a precision tool that guides other tools. The
 plan IS the jig. It ensures every cut is repeatable and accurate.
 
-## Prerequisites
+**Prerequisites**: jig assumes you already have a reasonably well-defined idea or spec
+— a design doc, a brainstorm/office-hours output, a clear feature request, or a rough
+plan that needs build discipline. If you don't have a spec yet, define WHAT to build
+first; jig's job is locking in HOW.
 
-Jig assumes you already have a reasonably well-defined idea or spec. This could be:
-- A design doc, blueprint, or product spec
-- Output from a brainstorming or office-hours session
-- A well-articulated feature request with clear goals
-- An existing rough plan that needs build discipline
-
-If you don't have a spec yet, define what you want to build first. Jig's job starts
-when you know WHAT to build and need to lock in HOW.
+This SKILL.md is a routing entry point. Each mode's steps and the deeper reference
+material live in the sub-files listed under **Sub-files** — read the ones for the
+mode you're in.
 
 ## Modes
 
 Jig spans the full build lifecycle — three modes, in order of a typical engagement:
 
 **Produce** (default) — Create a new implementation plan from a spec.
+Steps: [[workflow/produce.md]].
 
 **Execute** — Build from an approved plan: maintain a build journal, emit a
 fresh-session handoff at a clean phase boundary, and write a structured retro at
 the end. This is what makes a build resumable and makes jig self-improving.
+Steps: [[workflow/execute.md]].
 
 **Review** — Audit an existing plan against the 12 build discipline patterns.
-Invoke with: `/jig review` or "review this plan against jig patterns"
+Invoke with `/jig review` or "review this plan against jig patterns".
+Steps: [[workflow/review.md]].
 
 ## Workflow Checklist
 
@@ -52,191 +53,14 @@ Track a jig engagement end to end (produce → execute → retro). This survives
 context compaction — re-anchor here after any break.
 
 ```
-- [ ] Spec understood — 95% confidence via clarifying questions (Produce · Step 1)
+- [ ] Spec understood — 95% confidence via clarifying questions (produce.md · Step 1)
 - [ ] Codebase explored — patterns, reuse, test infra, shared files (Step 2)
 - [ ] Plan drafted — 12 core patterns + loop/cross-model where they apply (Step 3)
 - [ ] Plan reviewed — cross-model pass, P1s fixed (Step 4)
 - [ ] Plan saved — jig/{YYYYMMDD}-{slug}.md, skill_version stamped (Step 5)
-- [ ] Build executed — journal maintained, gate passed each phase (Execute Mode)
-- [ ] Retro written — jig/review/{YYYYMMDD}-{slug}-retro.md (Execute Mode)
+- [ ] Build executed — journal maintained, gate passed each phase (execute.md)
+- [ ] Retro written — jig/review/{YYYYMMDD}-{slug}-retro.md (execute.md)
 ```
-
----
-
-## Produce Mode
-
-### Step 1: Understand the Spec
-
-Read the provided spec, idea, or design doc. Then ask clarifying questions via
-AskUserQuestion until you reach **95% confidence** across these areas:
-
-- **Technical decisions**: Frameworks, libraries, patterns. Any hard constraints?
-- **Edge cases**: Empty input, concurrent access, network failure, auth edge cases
-- **Integration points**: What existing code does this touch? External APIs?
-- **Scope boundaries**: What is explicitly NOT included? Where do we stop?
-- **Success criteria**: How do we verify each phase is done? What does "working" mean?
-- **Existing solutions**: What already partially solves this? Can we reuse?
-
-Keep asking until 95% confident. Each question should surface a non-obvious
-decision — don't ask about things determinable from the codebase. If a question
-has an obvious answer, state your assumption and move on.
-
-**Scope challenge** (before planning): What existing code already solves sub-problems?
-What is the minimum set of changes? If the plan would touch 8+ files or introduce
-2+ new services, that's a complexity smell — challenge whether the same goal can
-be achieved with fewer moving parts.
-
-### Step 2: Explore the Codebase
-
-Launch Explore agents to understand:
-
-1. **Existing patterns and conventions** — How does this codebase structure code?
-   What naming conventions, directory structure, import patterns?
-2. **Reuse opportunities** — What already partially solves sub-problems?
-   Capture outputs from existing flows rather than building parallel ones.
-3. **Test infrastructure** — What framework (vitest, jest, pytest, etc.)?
-   Where do tests live? What's the test naming convention? What's the test command?
-4. **Shared files** — Types, configs, schemas that multiple phases might touch.
-   These need explicit ownership declarations in the plan.
-
-### Step 3: Create the Plan
-
-Enter plan mode. Create the implementation plan following the structure defined in
-[[plan-structure.md]].
-
-The plan MUST include the 12 core build discipline patterns from [[patterns.md]], plus the
-loop/cross-model patterns (13–22) where they apply — especially the **Loop Contract** (pattern
-17: L1 tool-loops / L2 independent + cross-model gates / L3 product loops, each with explicit
-bounds and stop conditions). For shaping a non-obvious loop, work the Loop Contract directly from
-[[quality-gates.md]]; if the optional `loop-god` companion skill is installed, use it to shape the
-loop and embed its Loop Contract into the plan. Every subagent prompt in the plan MUST embed these
-principles:
-
-**From Karpathy:**
-- State assumptions explicitly before implementing. If uncertain, stop and ask.
-- Minimum code that solves the problem. No speculative features or abstractions.
-- Surgical changes only — touch only what the task requires.
-- Every step has verifiable success criteria: "run X, expect Y."
-
-**From the orchestrator model:**
-- The builder reads the plan and coordinates subagents. It never writes code itself.
-- Each subagent gets a complete, self-contained prompt with all context needed.
-- File ownership is explicit — each subagent knows what it CAN and CANNOT edit.
-- Safety rails in every prompt: "DO NOT edit any files outside {dir}/"
-
-Quality gate instructions are embedded directly in the plan after each phase.
-See [[quality-gates.md]] for the full pipeline.
-
-### Step 4: Review Pass (optional, recommended)
-
-After creating the plan, offer an independent review:
-
-```bash
-which codex 2>/dev/null && echo "CODEX_AVAILABLE" || echo "CODEX_NOT_AVAILABLE"
-```
-
-**If Codex available**: Offer to run `codex exec` review of the plan. Prompt:
-"You are a brutally honest technical reviewer. Find what the plan missed: logical
-gaps, unstated assumptions, overcomplexity, feasibility risks, missing dependencies."
-
-**If not**: Offer to launch a Claude adversarial subagent (fresh Agent with
-independent context) with the same prompt.
-
-The reviewer checks:
-- Are the build discipline patterns present (12 core + the loop/cross-model patterns where relevant)?
-- Are subagent prompts specific enough to execute without ambiguity?
-- Are file ownership boundaries clear and non-overlapping?
-- Are external-API facts pinned (not "verify at build")? Are loops bounded with stop conditions?
-- Are there logical gaps, missing tests, or unstated assumptions?
-
-Fix findings before presenting for approval. Scope the Codex review tightly and stream its
-output to a file (don't pipe through `tail`).
-
-### Step 5: Approval and Save
-
-Present the plan for user approval via ExitPlanMode. Iteration is expected — the
-user will likely review and request changes before approving.
-
-Once approved:
-1. Create `jig/` directory in the repo root if it doesn't exist
-2. Save the plan as `jig/{YYYYMMDD}-{slug}.md` (e.g., `jig/20260417-auth-refactor.md`)
-3. Stamp the plan's Overview with `**Generated by jig skill_version**: {version}`,
-   reading `{version}` from `plugins/jig/.claude-plugin/plugin.json` (`"version"`).
-   This keeps every plan — and the journal and retro derived from it — interpretable
-   as jig evolves.
-4. The plan is now the source of truth for building.
-
-The session can then begin executing the plan phase by phase — see **Execute Mode**
-below. The plan contains all the build instructions; Execute Mode adds the durable
-artifacts that make the build resumable and feed jig's self-improvement loop.
-
----
-
-## Execute Mode
-
-Producing the plan is only half of jig. **Executing** it — building phase by phase
-from the saved plan — is where the discipline pays off, and where jig captures what
-it learns. The plan already carries every build instruction (subagent prompts, quality
-gates, file ownership); this mode adds three durable artifacts on top.
-
-You are the orchestrator ([[patterns.md]] #1 + #17): read the plan, build phase by
-phase, and maintain these three artifacts as you go.
-
-### 1. Build journal — during the build
-
-Maintain an append-only journal at `jig/{YYYYMMDD}-{slug}-journal.md` per
-[[build-journal.md]] — one entry per phase capturing the decisions, the exact
-strings/numbers/APIs the plan left in prose (synthesized contracts), deviations, and
-the green checkpoint (SHA + how verified). This is the orchestrator's connective
-tissue, which otherwise dies with the session.
-
-### 2. Fresh-session handoff — at a clean boundary, high context
-
-At a clean phase boundary (gate PASSED, checkpoint committed) when context runs high
-(~50%), emit a self-contained copy-paste handoff prompt per [[build-journal.md]] so a
-fresh session resumes with zero re-derivation. Never hand off mid-phase.
-
-### 3. Structured retro — at the end / at a session break
-
-Produce a retro at `jig/review/{YYYYMMDD}-{slug}-retro.md` per [[retro-template.md]]:
-a short human summary plus one machine-parseable findings block. This is the first
-input to the self-improvement loop — org-wide automation harvests the generalizable
-findings to improve the jig skill itself. The highest-signal field is
-`orchestrator_workaround` (what the session had to invent because the plan or skill
-fell short).
-
-All three artifacts are stamped with `skill_version` so findings stay interpretable
-as jig evolves. Draft-for-human-review only — the loop never auto-edits the skill.
-
----
-
-## Review Mode
-
-When reviewing an existing plan, read [[review-checklist.md]] and audit the plan
-against the 12 core build discipline patterns (the scored checklist), then spot-check the
-loop/cross-model patterns (13–22 in [[patterns.md]]) wherever the plan has loops, external
-APIs, parallel phases, or concurrent state.
-
-1. Read the plan file
-2. Check each pattern: present, partial, or missing
-3. Score each pattern 1-3 (3 = complete, 2 = present but incomplete, 1 = missing)
-4. Report gaps with specific suggestions
-5. Compute overall readiness score (sum / 36 as percentage)
-6. Offer to fix missing patterns in-place
-
----
-
-## Cross-Model Review
-
-Jig uses cross-model review as a quality signal. Two independent models agreeing
-on a finding is stronger than one model's thorough analysis.
-
-- **Codex available**: Use `codex exec` for independent plan review
-- **Codex not available**: Use a fresh Claude Agent subagent (independent context,
-  no shared conversation history — genuine independence)
-
-Cross-model tension (reviewers disagree) is surfaced to the user. Neither model
-auto-incorporates the other's recommendations. The user decides.
 
 ## Gotchas
 
@@ -259,30 +83,15 @@ auto-incorporates the other's recommendations. The user decides.
 - **The scorecard is a conversation, not a grade.** Not every pattern applies to every plan; mark
   N/A deliberately rather than forcing all of them.
 
-## What Good Looks Like
-
-A jig plan is ready to build when:
-- A fresh Claude Code session could execute it with no extra context — every subagent prompt is
-  copy-paste runnable with file paths, a verify command, and safety rails.
-- File ownership is explicit and non-overlapping; shared files are written in exactly one phase.
-- Every loop has a tier, a maxIters, a checkpoint, and a STOP/escalate trigger (the Loop Contract).
-- External-API facts are pinned, not deferred. High-risk phases have a cross-model gate.
-- A cross-model review of the plan found no unaddressed P1s before approval.
-- The plan is saved to `jig/{YYYYMMDD}-{slug}.md` in the repo as the durable source of truth.
-
-A jig build (Execute Mode) went well when:
-- The journal has one entry per phase with synthesized contracts + a green checkpoint SHA — a fresh
-  session could resume from `{plan, journal, handoff}` alone with zero re-derivation.
-- A structured retro exists at `jig/review/{YYYYMMDD}-{slug}-retro.md`, its findings block parses,
-  and each generalizable finding names a concrete `orchestrator_workaround`.
-
 ## Sub-files
 
-Grouped by lifecycle stage — read the ones for the mode you're in.
+Grouped by lifecycle stage. Read the workflow file for the mode you're in, then the
+reference/template files it points to.
 
 **Produce** — creating a plan
 | File | When to Read |
 |------|-------------|
+| [[workflow/produce.md]] | The 5-step produce workflow (understand → explore → plan → review → save) |
 | [[patterns.md]] | The build discipline patterns (12 core + 13–22 loop/cross-model) and their rationale |
 | [[plan-structure.md]] | The plan template — section-by-section output structure |
 | [[quality-gates.md]] | The quality-gate pipeline + loop bounds to embed after each phase |
@@ -290,13 +99,20 @@ Grouped by lifecycle stage — read the ones for the mode you're in.
 **Execute** — building from a saved plan
 | File | When to Read |
 |------|-------------|
+| [[workflow/execute.md]] | Orchestrating the build: journal → handoff → retro |
 | [[build-journal.md]] | Maintain the build journal + emit a fresh-session handoff |
 | [[retro-template.md]] | Write the structured retro that feeds the self-improvement loop |
 
 **Review** — auditing an existing plan
 | File | When to Read |
 |------|-------------|
+| [[workflow/review.md]] | The scoring workflow for a plan audit |
 | [[review-checklist.md]] | The scored 12-pattern audit checklist |
+
+**Reference** — shared across modes
+| File | When to Read |
+|------|-------------|
+| [[reference/cross-model-review.md]] | Cross-model review philosophy + "What good looks like" success criteria |
 
 ## Related
 
