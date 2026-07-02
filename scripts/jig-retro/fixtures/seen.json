@@ -1,0 +1,12 @@
+{
+  "_note": "Fixture state. The single seen entry is fullHash 330d56c1... = area 'contracts' + normalize('Pin the full string contract'), which is repo-A finding F1 (and repo-B F1, same fingerprint). repos is ['acme/repo-a'] ONLY, so a repo-A re-encounter is NOT new work, but the repo-B encounter of the same fullHash IS new work (new repo -> union repos, raise confidence to max).",
+  "digest_issue": null,
+  "seen": {
+    "330d56c195f45582160cca84e806be56d58de4e871339e60221c18ac0f551b14": {
+      "area": "contracts",
+      "proposed_skill_change": "Pin the full string contract",
+      "repos": ["acme/repo-a"],
+      "confidence": "medium"
+    }
+  }
+}
