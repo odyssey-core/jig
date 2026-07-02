@@ -3,7 +3,7 @@ description: >-
   Quality gate pipeline run after each build phase. Defines review ordering,
   cross-model fallback, cold read trigger, and P1/P2 handling. Embed these
   instructions directly in each phase's quality gate section.
-updated: "2026-04-17"
+updated: "2026-06-09"
 ---
 
 ## When to Read This File

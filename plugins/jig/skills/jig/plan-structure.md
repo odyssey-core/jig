@@ -2,7 +2,7 @@
 description: >-
   Template for the plan document Jig produces. Defines the sections, their order,
   and what each must contain. Use when creating a new plan in produce mode.
-updated: "2026-04-17"
+updated: "2026-07-01"
 ---
 
 ## When to Read This File

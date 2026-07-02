@@ -2,7 +2,7 @@
 description: >-
   The 12 build discipline patterns that every Jig plan must include. Each pattern
   has rationale (what goes wrong without it) and a concrete plan example.
-updated: "2026-04-17"
+updated: "2026-06-09"
 ---
 
 ## When to Read This File
