@@ -71,6 +71,14 @@ jobs:
           n=0
           echo "[]" > _retros/manifest.json
           while read -r repo && read -r path; do
+            # C1: a retro lives at jig/review/{slug}-retro.md at the repo ROOT.
+            # Enforce that exact shape so we never ingest (a) this repo's own test
+            # fixtures under scripts/jig-retro/fixtures/**/jig/review/*-retro.md, or
+            # (b) any other nested / non-retro file that merely contains "jig_retro".
+            if [[ ! "$path" =~ ^jig/review/[^/]+-retro\.md$ ]]; then
+              echo "skip (not a root jig/review retro): ${repo}/${path}"
+              continue
+            fi
             n=$((n+1))
             gh api "repos/${repo}/contents/${path}" --jq .content \
               | base64 -d > "_retros/${n}.md"

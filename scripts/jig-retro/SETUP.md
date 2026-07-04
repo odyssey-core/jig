@@ -105,6 +105,12 @@ write. `GITHUB_TOKEN` is write-only here; it is never used to read other repos.
 - **Discovery truncation:** if `gh search code` returns exactly the page limit
   (1000), the run logs `DISCOVERY_TRUNCATED` and appends a
   `⚠ discovery may be truncated` line to the digest body.
+- **Path scoping (C1):** discovery only ingests files whose path is exactly
+  `jig/review/{slug}-retro.md` at a repo's **root**. This deliberately excludes
+  this repo's own test fixtures (`scripts/jig-retro/fixtures/**/jig/review/…`) and
+  any other nested file that merely contains the string `jig_retro`. Expect the
+  first real run to ingest this repo's own retro
+  (`jig/review/20260701-jig-self-improvement-retro.md`) — that's correct, not noise.
 - **Never** opens per-finding issues and **never** edits skill files — it only
   maintains the single `[jig-retro] Improvement digest` issue and the state file.
 
