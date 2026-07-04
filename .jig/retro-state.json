@@ -1,4 +1,41 @@
 {
-  "digest_issue": null,
-  "seen": {}
+  "digest_issue": 1,
+  "seen": {
+    "1450647af92d8e9ef85afcc9dc99625e644d101b65898565ff6b24154c2bdc5f": {
+      "area": "contracts",
+      "proposed_skill_change": "jig should add a gate that every field named in a contract's state/output schema is echoed in the subagent prompt of the phase that produces it, or flags the contract-vs-prompt mismatch before build.",
+      "repos": [
+        "odyssey-core/jig"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-07-04"
+    },
+    "086b5139ecdb3700de270437f8e35a773590922c27b94ee717208be08f6548fb": {
+      "area": "review",
+      "proposed_skill_change": "jig's cross-model gate step should instruct the external reviewer to treat the plan's Pinned Contracts as ground truth and report deviations FROM them; and instruct the orchestrator to adjudicate each finding against the contract and record rejects, never auto-apply.",
+      "repos": [
+        "odyssey-core/jig"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-07-04"
+    },
+    "16469bcf11afdb78f0121384ca6ef3e3ad3fffc6c68b43496d5610b8394d7cf4": {
+      "area": "testing",
+      "proposed_skill_change": "For a hand-rolled parser over untrusted input, jig should require the test-author phase to include adversarial/negative cases (malformed headers, injection-adjacent bytes, out-of-enum values), not just the documented happy path.",
+      "repos": [
+        "odyssey-core/jig"
+      ],
+      "confidence": "medium",
+      "first_seen": "2026-07-04"
+    },
+    "709ec8a6eabdcbaf73fb1eb36da3e383158f204b6231b81535af809ccddaaa2a": {
+      "area": "testing",
+      "proposed_skill_change": "jig plans that pin a CLI invocation should not assume GNU coreutils (timeout/gtimeout/date -d) on macOS; pin a portable invocation or a documented fallback.",
+      "repos": [
+        "odyssey-core/jig"
+      ],
+      "confidence": "medium",
+      "first_seen": "2026-07-04"
+    }
+  }
 }
