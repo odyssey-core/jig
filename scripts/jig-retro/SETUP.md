@@ -19,10 +19,37 @@ write. `GITHUB_TOKEN` is write-only here; it is never used to read other repos.
 ## Steps (all HITL — a human must do these once)
 
 1. **[HITL] Create a GitHub App in the `odyssey-core` org.**
-   - Org settings → Developer settings → GitHub Apps → **New GitHub App**.
-   - Repository permissions: **Contents: Read-only** and **Metadata: Read-only**
-     (Metadata is mandatory and auto-selected). No write permissions.
-   - No webhook needed (uncheck "Active").
+
+   Go to: `https://github.com/organizations/odyssey-core/settings/apps/new`
+   (or: org **Settings → Developer settings → GitHub Apps → New GitHub App**).
+
+   The form asks for a lot of fields — most are irrelevant to us. Here is every
+   field it shows, top to bottom, and exactly what to put. **Anything not listed
+   here: leave at its default.**
+
+   | Field | What to enter |
+   |-------|---------------|
+   | **GitHub App name** | `odyssey-core jig-retro` — must be **globally unique across all of GitHub**. If it's taken, add a suffix (e.g. `odyssey-core jig-retro-digest`). This name is cosmetic; the workflow never references it. |
+   | **Description** | Optional. e.g. "Read-only cross-repo retro discovery for the jig self-improvement loop." |
+   | **Homepage URL** | **Required.** GitHub just needs a valid URL here — it is never used. Put the repo URL: `https://github.com/odyssey-core/jig` |
+   | **Callback URL** | Leave blank. |
+   | Request user authorization (OAuth) during installation | Leave **unchecked**. |
+   | Enable Device Flow | Leave **unchecked**. |
+   | **Setup URL** (optional) | Leave blank. |
+   | Redirect on update | Leave **unchecked**. |
+   | **Webhook → Active** | **UNCHECK this box.** This is the key one: when "Active" is checked, GitHub **requires a Webhook URL**. We don't use webhooks (the workflow is a cron poll), so unchecking it makes the Webhook URL field go away. |
+   | **Webhook URL** | Leave blank (the field disappears / is not required once "Active" is unchecked). |
+   | **Webhook secret** | Leave blank. |
+   | **Permissions → Repository permissions → Contents** | Set to **Read-only**. |
+   | **Permissions → Repository permissions → Metadata** | **Read-only** (this auto-selects and cannot be removed — that's expected). |
+   | *(all other permissions — Issues, Pull requests, Actions, Account permissions, etc.)* | Leave at **No access**. The App only needs to READ code across repos. |
+   | **Where can this GitHub App be installed?** | **Only on this account** (`odyssey-core`). |
+
+   Then click **Create GitHub App** at the bottom.
+
+   > If the form rejects the submit, it's almost always one of two things: the
+   > **name isn't unique** (add a suffix) or **Webhook "Active" is still checked**
+   > with an empty Webhook URL (uncheck "Active").
 
 2. **[HITL] Generate the App's private key.**
    - On the App's page → **Private keys** → **Generate a private key**.
