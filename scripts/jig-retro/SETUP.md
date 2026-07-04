@@ -61,9 +61,16 @@ write. `GITHUB_TOKEN` is write-only here; it is never used to read other repos.
      (org-wide install so discovery sees every repo with a retro).
 
 4. **[HITL] Store the App ID as a repository variable.**
-   - This repo → Settings → Secrets and variables → Actions → **Variables** tab →
-     **New repository variable**: name `JIG_APP_ID`, value = the App's numeric
-     **App ID** (from the App's General page).
+   - **Find the App ID again:** go to
+     `https://github.com/organizations/odyssey-core/settings/apps` (org **Settings
+     → Developer settings → GitHub Apps**) → click **Edit** next to your app →
+     the **General** tab shows **App ID** near the top (a short number, e.g.
+     `App ID: 1234567`).
+   - ⚠ **App ID ≠ Client ID.** The same page shows a **Client ID** (looks like
+     `Iv23li…` / `Iv1.abc…`). Do **not** use that. `JIG_APP_ID` must be the
+     **numeric App ID** (digits only).
+   - Then: this repo → Settings → Secrets and variables → Actions → **Variables**
+     tab → **New repository variable**: name `JIG_APP_ID`, value = that number.
 
 5. **[HITL] Store the private key as a repository secret.**
    - Same page → **Secrets** tab → **New repository secret**: name
