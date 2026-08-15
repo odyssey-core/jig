@@ -36,6 +36,285 @@
       ],
       "confidence": "medium",
       "first_seen": "2026-07-04"
+    },
+    "df042b170a0bdc165342352699241177c32dee5dbe0537a8f59d73ac448230ee": {
+      "area": "review",
+      "proposed_skill_change": "Add an explicit cross-criterion consistency pass to the produce review step: group criteria making the same class of claim and assert they share one scope and one source of truth. Single-artifact review cannot catch this class, so a sharper reviewer is not the fix.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "43c688334c0e0f8a5a7c210fe719fb1ab6bfed23b481556be2e4fcf942f0cd47": {
+      "area": "sequencing",
+      "proposed_skill_change": "When a plan depends on the shape of an artifact captured during the build, produce must capture a sample during the explore step or write the dependent contract shape-agnostically. Pinning a vocabulary you have never seen is the same defect as pinning an API you have never called, which the skill already forbids.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "d21a38b99748b7f3f6195cd00d779276f4b655af3eb8644184643a8cc9e2db9f": {
+      "area": "contracts",
+      "proposed_skill_change": "Any numeric threshold in a plan must be expressed as a rule for deriving it at check time, never as a literal fixed at authoring time. A literal threshold is correct only until the first phase lands.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "e114750049272438574cb65d4ebe041bcd3dea43f15bd47fb61bc1cbc8636084": {
+      "area": "contracts",
+      "proposed_skill_change": "A pinned contract for any optional field must state behaviour for all three of absent, undefined, and falsy-but-defined. Under-specification here is invisible, because the sentence sounds complete.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "08f8c19008f7c9a91582e57d86d61d470dc354b952e9d8917e51980a2e6defd1": {
+      "area": "ownership",
+      "proposed_skill_change": "Generate the ownership matrix FROM the subagent prompts file lists rather than hand-writing both, so one edit cannot leave them inconsistent. Where generation is impossible, ship the four-place amendment checklist in the plan template itself.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "863210f650cd91ff48fbe2bb011ebae336378d8444dc3011e83fe943a178ccf6": {
+      "area": "honesty",
+      "proposed_skill_change": "When produce resolves a spec ambiguity with a clarifying question, the question must test whether the mechanism achieves the stated purpose, not only which variant to build. Ask what this control does NOT cover before asking which form it takes.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "28e10decac7966d4b934931c35d1ba7ece62cdef0a24283b5de8a20766acc396": {
+      "area": "testing",
+      "proposed_skill_change": "Before approval, produce must cross-reference every module a criterion depends on against a named owning test file. A criterion resting on an untested helper is a criterion resting on nothing.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "bd0bb09a7a8f932bf395438717cea492a8c72ef00c92acfe972c39f857d8173a": {
+      "area": "testing",
+      "proposed_skill_change": "Every runnable snippet in a plan must be executed once before approval, or marked UNVERIFIED in the plan text. A pinned command that has never run is a guess with better formatting.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "46e544def2fa372c449df24e3c0719d86819dc31acf67e99a200f4425f3e7487": {
+      "area": "review",
+      "proposed_skill_change": "State the calibration in the workflow: a cross-model reviewer is strong at plan time, reliable at locating WHERE to look at code time, and unreliable about MECHANISM at code time. Require re-derivation from source before acting on any code-time cross-model finding.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "e3637c34ef2ce7c62db9efd98c7a41ac024cd8cafd1376a248c74a87e43ec936": {
+      "area": "sequencing",
+      "proposed_skill_change": "jig should treat 'a credential must reach the AGENT process' as a distinct precondition class from 'a credential must reach a subprocess', and require any plan depending on the former to carry a pre-flight assertion as step zero. Nothing inside a running session can bridge into its own process environment.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "63914b289e193030774e58f6336623fb1c12add9b9b0b9b1cbe497e08e86333f": {
+      "area": "review",
+      "proposed_skill_change": "jig should require any plan shipping a guard or invariant test to state its threat model, and should give gates an explicit severity discriminator: accidental-drift findings bind, adversarial-evasion findings against an actor with write access do not. Without it a gate cannot tell a decisive finding from an unfixable one.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "c207f87cf0c1b0aa8b0f2db7da01914a13193ef3d0f5a314e5a97a79abe280a7": {
+      "area": "review",
+      "proposed_skill_change": "jig gate steps should require premise verification before either fixing OR dismissing a cross-model finding. A confidently worded finding from a different model is not evidence, and most premises settle in seconds.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "827e8105b4620b91771a985991acfffcda5fae66eba1ef7339d3964bbb5a3a2a": {
+      "area": "review",
+      "proposed_skill_change": "jig's gate should carry an explicit exception to defer-P2s: a finding that can falsify the criterion the gate is about to close is not deferrable regardless of its label. Departures from gate policy should be recorded as numbered plan amendments so the trail shows the rule was broken deliberately, with cause.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "c5d1b200a110e387d08df17bcdb627cf2cccbf0f3fe36847df0844790a8ef16e": {
+      "area": "handoff",
+      "proposed_skill_change": "jig's handoff template should carry mandatory sections for plan amendments made during the build, per-wave blocking status for each, moved numeric thresholds with current values, and negative instructions. A template that assumes a static plan is wrong for exactly those builds long enough to need a handoff.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "c008f365d9be140bb7f5303c21fde0c16b42f633223fa8c095cfc460be57688e": {
+      "area": "honesty",
+      "proposed_skill_change": "jig should require any journal or handoff entry claiming verification to name the verification METHOD, and treat an unqualified 'verified' as unverified. For embedded runnable snippets specifically: signature-checking is not execution-checking, and a snippet that will spend money or mutate state must be executed in a dry form before being described as correct.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "10ed015d0013123b8321d2f6e8013f5af1df48677fdef1138b3c063ac026acb2": {
+      "area": "subagents",
+      "proposed_skill_change": "jig should instruct plan authors to write subagent prompts as intent plus an acceptance test plus a suggested implementation, with the implementation explicitly marked advisory and the test binding. A prompt carrying only an implementation cannot be checked by the agent executing it, and the orchestrator is the least likely party to catch its own specification error.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "2a7842723ea8ec03914c4d79484b4b30cdee50fb44dc02f673d1426d64553a9c": {
+      "area": "contracts",
+      "proposed_skill_change": "jig should add a cross-criterion consistency pass to plan review: any scope, threshold or file set named by more than one criterion is checked as a SET, not criterion by criterion. Single-criterion review cannot detect this class by construction, so a sharper reviewer is not the fix.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "e985b68b0ef3625ddb0d6bfc7ca5fcc41bd2e22cfbeeea1cc44315074bb426ec": {
+      "area": "testing",
+      "proposed_skill_change": "jig should distinguish 'test passes' from 'test is durable' in phase deliverables, and any criterion requiring a TRACKED artifact should carry a tracked-check separate from its content check. A new test is not a deliverable until it is committed.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "medium",
+      "first_seen": "2026-08-15"
+    },
+    "b4e8658d217e54502da62d2fd91c3fc0cf0f1dcfda2a2a858a6e371d5d64e2f5": {
+      "area": "contracts",
+      "proposed_skill_change": "jig should require that prose derived from a captured fixture QUOTES the fixture rather than paraphrasing it. A paraphrase of a captured contract is a second transcription, and a second transcription is the defect the capture exists to prevent.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "2996f80e7f2716a9e9ef4f10166da54bb687eed25c4be8b3245927eabbdad9be": {
+      "area": "review",
+      "proposed_skill_change": "jig should state that any document citing a symbol, test title or line number must have its citations resolved BY A COMMAND, AT THE GATE - after every wave has renamed what it is going to rename. A wave that renames a symbol is making a documentation edit, not only a code edit. NOTE THE LIMIT OF THIS FIX, which finding F3 closes: resolving a citation proves the title EXISTS, not that the test behind it still asserts anything. The two checks are complementary and neither substitutes for the other.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "e234088f804cff0dfbaa1b995797ae1198d45ed32d2cdba1636bb5342fb04a36": {
+      "area": "testing",
+      "proposed_skill_change": "THE HIGHEST-VALUE CHANGE FROM THIS BUILD. The plan tried to stop assertion-hollowing three ways - a safety rail telling agents not to weaken tests, a status-file claim listing what moved, and a reviewer diffing those claims against the diff. All three are self-report or human reading, and ALL THREE FAILED HERE. jig should require that a coverage-map entry NAME THE MUTATION THAT REDDENS THE SUCCESSOR TEST, not only the successor's title - a title resolves whether or not the test still asserts anything, so citation-resolution alone cannot catch this. 'I did not weaken it' is not checkable; 'deleting the invariant reddens this file' is.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "0cd965f7873f3fcec55d81c1e79fd3a43124d731ccf048787a67db92ffc48019": {
+      "area": "review",
+      "proposed_skill_change": "jig should state that a verification command must print on both branches, and stronger: make the sweep a script whose exit code is the verdict, and assert a FLOOR on any discovery command. The defect is not a shell idiom — it is a check whose failure mode is to produce no output.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "53406e00fea73b8a5ec802334a05ba235d7d6a53562591bdddf85a59569aa704": {
+      "area": "contracts",
+      "proposed_skill_change": "jig should state that an amendment must sweep FOUR places: the criterion row, the prompt body, the prompt's safety rails, and the file-ownership matrix. Each place looks correct alone; only the set is wrong.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "77e154e88d7ca22989a9368b56b0ea2de6ca0d4559a411d6779341d484210fa2": {
+      "area": "review",
+      "proposed_skill_change": "jig should tell orchestrators to weight a reviewer by whether it ran the code. A reviewer that is wrong about HOW but right about WHERE still earns its place, but its findings must be re-derived before action, and at least one reviewer per gate should be required to produce experimental evidence.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "125df6d728bb55f6ac3799c0a2543b0891ce9e9d33f1d0105a4d8606d55188a1": {
+      "area": "honesty",
+      "proposed_skill_change": "jig should state that signature-checking is not execution-checking, and that every snippet embedded in a plan is unverified until it has been run. Pin the module system for any snippet using top-level await.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "be8f36b4740ee13600a1ce8b95f24ef1171737365ecca5001956fa08f549ab2c": {
+      "area": "ownership",
+      "proposed_skill_change": "jig should make 'stop and report' the explicit default when a builder must change a PUBLIC interface to satisfy a test, and require the orchestrator to record dissent when reviewers split rather than reporting a decision as unanimous.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "c98ac43cdd223bbd06cef680f8bddcc731993acbe396c3b0ddc453c3c8151617": {
+      "area": "handoff",
+      "proposed_skill_change": "jig should state that a safety- or rights-behaviour change is never actioned on a relayed approval, and that a decision made with the diff in view supersedes a relayed one. Record both, with times.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "713012a883cf6c76a6b3cb9055718e5730517e73bbcdca4bc65e319493f5ceb2": {
+      "area": "contracts",
+      "proposed_skill_change": "jig should require that a criterion asserting a binding to EXTERNAL STATE name the check that reads that state. A test that mutates the same record the check reads proves the comparison, not the binding.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "a4406b4fa592ba1e723f175dddc979e6cd5c0b01c51ec08fab88e93f53f7856b": {
+      "area": "sequencing",
+      "proposed_skill_change": "jig should state that a discovery scan produces CANDIDATES, not answers, and that resolving them is orchestrator work done before handoff. A grep hit's spelling does not tell you what type it belongs to.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-15"
+    },
+    "b62556ca6103508a5d3e71dd087e74db8d0186bf278b61d976064e6ea25eff82": {
+      "area": "honesty",
+      "proposed_skill_change": "jig should require that a correction to a source document be scoped to the CLAIM across the whole document, not to a section, and that a decision found resting on a voided mechanism be flagged for re-evaluation rather than quietly reworded.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "medium",
+      "first_seen": "2026-08-15"
+    },
+    "35ca7ea4cf7020da98709c4cb3839531b0e5ef267391753aa70ad7d5fad0edf3": {
+      "area": "other",
+      "proposed_skill_change": "jig should state that a verification sweep must invoke a criterion's existing check, never re-implement it. A re-implementation is a second definition, and second definitions drift — this one drifted on its first run.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "medium",
+      "first_seen": "2026-08-15"
     }
   }
 }
