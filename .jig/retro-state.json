@@ -315,6 +315,114 @@
       ],
       "confidence": "medium",
       "first_seen": "2026-08-15"
+    },
+    "034b9fcea38aa97ae62d0ad118b4cc4e45dfc1779772026c87cb025984c94acb": {
+      "area": "subagents",
+      "proposed_skill_change": "State that a subagent refusal is a primary defect signal and should be logged as a finding, not resolved as a blocker. The prompt style that produces it is the one the skill already recommends for a different reason - intent plus acceptance test plus advisory implementation - because an agent given the INTENT can test the instruction against it, and the orchestrator is the least likely party to catch its own specification error. Measure a build by how many refusals it produced; zero refusals across a long build suggests prompts that cannot be checked by the agent executing them.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-16"
+    },
+    "c36b521662fd34989937e9001c32ce331bc848ddc4a1a83c02549ca94e1cc74c": {
+      "area": "honesty",
+      "proposed_skill_change": "Require every control a plan introduces to carry an explicit statement of what it does not detect, in the same place as the control. A check documented as stronger than it is will be trusted past its strength, and the damage arrives as churn rather than as a missed defect - which is harder to attribute. Add the question to gate review: for each control, what would pass this check while still being broken.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-16"
+    },
+    "76cf5f54fd921403d582dadb65dfbe0a7eab4756afb8fdbf01968ad14b13ca48": {
+      "area": "contracts",
+      "proposed_skill_change": "jig should state that the amendments table is a decision log and not an application log, and that the four-place sweep is verified by reading the four places, never by reading the table. Where an amendment names the surfaces it must reach, a mechanical check can grep each named surface - subject to the limits in O2.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-16"
+    },
+    "b21b5e37097e261e6f869c8317dea73192f011e54faf2b26580f6b08da6fef95": {
+      "area": "testing",
+      "proposed_skill_change": "This is a stronger statement of F3 than F3 makes, and should replace it: for every control a phase introduces, the gate asks what single deletion removes this control, applies it, and requires a named test to redden. A green suite proves the code works; only the deletion proves the code is DEFENDED. Both P1s here were invisible to three reviewers, a cross-model pass and a full green suite.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-16"
+    },
+    "4e1db9d21743907ef338c07c9e177e7bc882e60f51d966063751c409ae22f23f": {
+      "area": "review",
+      "proposed_skill_change": "The ratio held from the previous build: review found less than execution did. jig should stop treating plan review as the primary quality gate for plan defects and state the expectation explicitly - roughly a dozen plan defects will surface during a build of this size regardless of review depth, most of them unsatisfiable instructions rather than wrong claims. Budget orchestrator time for amendments as a planned cost, not an exception.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-16"
+    },
+    "d3b4926b02ad39eedf6ebbdd8bd3f1bfaa8d2edd82a1d9376cac6dfc5381e26e": {
+      "area": "honesty",
+      "proposed_skill_change": "jig should state that the orchestrator is inside the blast radius of every rule it enforces, and that self-reported orchestrator errors belong in the journal at the moment they happen, not in the retro. The specific mechanical fix that worked: make the check own its own state so no manual step can precede it - see the floor mechanism in A13. The specific habit that worked: when re-running anything after a failure, record the failing run.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-16"
+    },
+    "07198fc687893f2172ff1faa106a42b10ee52778ea4bd9c26a248815f02e7769": {
+      "area": "testing",
+      "proposed_skill_change": "jig should specify the mutation protocol rather than only requiring mutations: assert the patch matches exactly once, record hashes at baseline, mutated and restored, and report the failing ASSERTION rather than the count. Add that a mutation which reddens nothing is itself a finding, and that adjusting a mutation until it reddens is fitting the check to the answer.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-16"
+    },
+    "5d1dd6eb89e13c3f6dad891158f53632b41486f7216d69f5dbad5b7056f2d826": {
+      "area": "contracts",
+      "proposed_skill_change": "Extend P3 with the author's own formulation: any literal whose correctness depends on WHEN the test runs is a derived value, not a fixture. The line-number form of this defect was already banned; this form slipped through because it LOOKED like a fixture rather than a threshold.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-16"
+    },
+    "103a943bbd24eaad9e9abed2ec0af61dbfe97ed4e5df5f07eeb3b3f53462399e": {
+      "area": "contracts",
+      "proposed_skill_change": "jig should ban line-number citations in plans and comments outright rather than asking authors to keep them fresh, and should extend the tense rule in both directions: no present tense for pre-change behaviour, and no scheduled claim about future work. Name a future dependency as a trigger condition. A rule depending on an author remembering failed six times in this build, every time authored by someone who had just read it.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-16"
+    },
+    "bb01d453a6a63f35d1aec65c2445303d9610bc16b6b61b4454996c95076ad712": {
+      "area": "review",
+      "proposed_skill_change": "jig should require that when a defect CLASS is identified anywhere, every phase is swept for that class before the finding is reported or closed, and that any clean assertion names the classes it covers. This is the P1 cross-criterion shape moved from criteria to review passes, and it is invisible to a reviewer working phase by phase.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-16"
+    },
+    "86c15f28ff4a352df28c3de87f799c78694851995de4ce6888e5c8bd1cd63629": {
+      "area": "review",
+      "proposed_skill_change": "jig should state that the cross-criterion pass covers every MECHANISM the criteria depend on - sweeps, floors, scanners, gate ordering - not only the criterion rows. Add the specific trap: a verification script whose exit code is the verdict must never be verified through a pipe.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-16"
+    },
+    "6d3159429c78201696fd71cb335bad44a4661fcd0415bffe09f2e2150ae049c0": {
+      "area": "other",
+      "proposed_skill_change": "jig should require a build to close with an explicit statement of what its controls do NOT cover, written as flatly as the achievements. The previous build's residue row exists because a control was documented as stronger than it was; the same discipline should apply to the build's overall claim, not only to individual controls.",
+      "repos": [
+        "odyssey-core/creative-support"
+      ],
+      "confidence": "high",
+      "first_seen": "2026-08-16"
     }
   }
 }
